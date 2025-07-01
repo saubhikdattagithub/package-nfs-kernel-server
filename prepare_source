@@ -1,1 +1,16 @@
-apt_src nfs-kernel-server
+git_src --branch debian/latest https://salsa.debian.org/kernel-team/nfs-utils.git
+
+# debian specific things
+cp -r debian "$dir/src/"
+
+apply_patches
+
+version="20250701"
+message="Build nfs-kernel-server from nfs-utils "
+
+# Create changelog entry
+dch --create --package nfs-utils --newversion "$version" "$message"
+
+# Only build nfs-kernel-server
+echo "fakeroot debian/rules binary-nfs-kernel-server" > "$dir/custom_build"
+chmod +x "$dir/custom_build"
